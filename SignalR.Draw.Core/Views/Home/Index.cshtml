@@ -1,0 +1,164 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<style type="text/css">
+    .house {
+        margin: 0;
+        padding: 0;
+    }
+
+        .house .room {
+            margin: 50px 10px;
+            padding: 0;
+            list-style-type: none;
+            width: 200px;
+            height: 200px;
+            float: left;
+        }
+
+            .house .room .board {
+                margin: 0;
+                padding: 0 0 0 10px;
+                border: 1px solid black;
+                width: 200px;
+                height: 200px;
+                text-align: left;
+                overflow: auto;
+            }
+
+            .house .room .name {
+                width: 200px;
+                height: 200px;
+            }
+
+            .house .room .input {
+                width: 200px;
+                height: 50px;
+            }
+
+                .house .room .input input {
+                    width: 100%;
+                }
+</style>
+<script src="~/lib/signalr/signalr.js"></script>
+<script type="text/javascript">
+    var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+
+    connection.on("ReceiveAsync", function (message) {
+        console.log(message);
+        receive(message.roomName, message.userName, message.content);
+    });
+
+    connection.start().catch(function (err) {
+        return console.error(err.toString());
+    }).then(function () {
+        inRoom("broadcast", myName, "加入房间");
+    });
+
+
+</script>
+
+<script type="text/javascript">
+    var myName = prompt("enter your name", "man");
+    $(function () {
+
+        $("#txtMyName").html(myName);
+
+        $("[name=content]").keydown(function (event) {
+            //send
+            if (event.keyCode == "13") {
+                var content = $(this).val();
+                var roomName = $(this).parent().parent().attr("name");
+                send(roomName, myName, content);
+                $(this).val("");
+            }
+        });
+
+        $("[name=in]").click(function () {
+            var roomName = $(this).parent().parent().attr("name");
+            inRoom(roomName, myName, "加入房间");
+            $(this).prop("disabled", "disabled");
+            $(this).siblings("button").prop("disabled","");
+        });
+
+        $("[name=out]").click(function () {
+            var roomName = $(this).parent().parent().attr("name");
+            outRoom(roomName, myName, "离开房间");
+            $(this).prop("disabled", "disabled");
+            $(this).siblings("button").prop("disabled", "");
+        });
+    })
+
+    //send data
+    function send(room, userName, content) {
+        connection.invoke("Send", room, userName, content).catch(function (err) {
+            return console.error(err.toString());
+        });
+    }
+
+    //receive data
+    function receive(room, userName, content) {
+        renderContent(room, userName, content);
+    }
+
+    //out room
+    function outRoom(room, userName, content) {
+        connection.invoke("OutRoom", room, userName, content).catch(function (err) {
+            return console.error(err.toString());
+        });
+    }
+
+    //in room
+    function inRoom(room, userName, content) {
+        connection.invoke("InRoom", room, userName, content).catch(function (err) {
+            return console.error(err.toString());
+        });
+    }
+
+    //render data
+    function renderContent(room, userName, content) {
+        console.log(content);
+        if (room == "") room = "broadcast";
+        if (room == "broadcast" && content != "离开房间" && content != "加入房间") {
+            $("[name=" + room + "] .board").append("<div>" + userName + " :" + content + "</div>")
+        }
+        else {
+            $("[name=" + room + "] .board").append("<div>" + userName + " :" + content + "</div>")
+        }
+    }
+</script>
+
+
+
+<div class="text-center">
+    <ul class="house">
+        <li class="room" name="broadcast">
+            <div class="board">
+            </div>
+            <div class="input">
+                <input  name="content" placeholder="say:" />
+            </div>
+            <div class="name">
+                广播
+            </div>
+        </li>
+    </ul>
+    <div style="clear:both"></div>
+    <ul class="house">
+        @for (int i = 1; i < 10; i++)
+        {
+            <li class="room" name="room@(i)">
+                <div class="board">
+                </div>
+                <div class="input">
+                    <input name="content" placeholder="say:" />
+                </div>
+                <div class="name">
+                    房间@(i)<button name="in">加入</button><button name="out" disabled>离开</button>
+                </div>
+            </li>
+        }
+    </ul>
+
+</div>
