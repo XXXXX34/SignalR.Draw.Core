@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SignalR.Draw.Core.SignalR;
+using StackExchange.Redis;
 
 namespace SignalR.Draw.Core
 {
@@ -35,7 +37,26 @@ namespace SignalR.Draw.Core
             //添加SignalR
             services.AddSignalR(options =>
             {
-               
+
+            })
+            //添加Redis支持分布式部属
+            .AddRedis(o =>
+            {
+                o.ConnectionFactory = async writer =>
+                {
+                    var connection = await ConnectionMultiplexer.ConnectAsync(Configuration["RedisConnectionString"], writer);
+                    connection.ConnectionFailed += (_, e) =>
+                    {
+                        Console.WriteLine("Connection to Redis failed.");
+                    };
+
+                    if (!connection.IsConnected)
+                    {
+                        Console.WriteLine("Did not connect to Redis.");
+                    }
+
+                    return connection;
+                };
             });
 
             //添加允跨域
