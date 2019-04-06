@@ -35,6 +35,18 @@ namespace SignalR.Draw.Core
             //添加SignalR
             services.AddSignalR();
 
+            //添加允跨域
+            services.AddCors(o =>
+            {
+                o.AddPolicy("Everything", p =>
+                {
+                    p.AllowAnyHeader()
+                     .AllowAnyMethod()
+                     .AllowAnyOrigin()
+                     .AllowCredentials();
+                });
+            });
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -61,6 +73,9 @@ namespace SignalR.Draw.Core
             {
                 routes.MapHub<ChatHub>("/chatHub");
             });
+
+            //添加允跨域
+            app.UseCors("Everything");
 
             app.UseMvc(routes =>
             {
