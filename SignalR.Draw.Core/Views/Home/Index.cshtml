@@ -43,7 +43,11 @@
 </style>
 <script src="~/lib/signalr/signalr.js"></script>
 <script type="text/javascript">
-    var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+    var connection = new signalR
+        .HubConnectionBuilder()
+        .withUrl("/chatHub")
+        .configureLogging(signalR.LogLevel.Information)
+        .build();
 
     connection.on("ReceiveAsync", function (message) {
         console.log(message);
@@ -56,6 +60,20 @@
         inRoom("broadcast", myName, "加入房间");
     });
 
+    async function start() {
+        try {
+            await connection.start();
+            console.log("connected");
+        } catch (err) {
+            console.log(err);
+            setTimeout(() => start(), 5000);
+        }
+    };
+
+    connection.onclose(async () => {
+        //重连
+        await start();
+    });
 
 </script>
 
@@ -79,7 +97,7 @@
             var roomName = $(this).parent().parent().attr("name");
             inRoom(roomName, myName, "加入房间");
             $(this).prop("disabled", "disabled");
-            $(this).siblings("button").prop("disabled","");
+            $(this).siblings("button").prop("disabled", "");
         });
 
         $("[name=out]").click(function () {
@@ -137,7 +155,7 @@
             <div class="board">
             </div>
             <div class="input">
-                <input  name="content" placeholder="say:" />
+                <input name="content" placeholder="say:" />
             </div>
             <div class="name">
                 广播

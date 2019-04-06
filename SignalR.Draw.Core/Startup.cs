@@ -33,7 +33,10 @@ namespace SignalR.Draw.Core
             });
 
             //添加SignalR
-            services.AddSignalR();
+            services.AddSignalR(options =>
+            {
+               
+            });
 
             //添加允跨域
             services.AddCors(o =>
