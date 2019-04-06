@@ -3,3 +3,4 @@
 ################################################################################
 
 /SignalR.Draw.Core/obj
+/SignalR.Draw.Core/bin/Debug/netcoreapp2.2
