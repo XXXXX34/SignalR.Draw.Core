@@ -37,8 +37,11 @@ namespace SignalR.Draw.Core
             //添加SignalR
             services.AddSignalR(options =>
             {
-
+                // Faster pings for testing
+                options.KeepAliveInterval = TimeSpan.FromSeconds(5);//心跳包间隔时间，单位 秒，可以稍微调大一点儿
             })
+            //Enables the JSON protocol for SignalR.
+            .AddJsonProtocol()
             //添加Redis支持分布式部属
             .AddRedis(o =>
             {
@@ -92,14 +95,14 @@ namespace SignalR.Draw.Core
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
+            //添加允跨域
+            app.UseCors("Everything");
+
             //添加SignalR
             app.UseSignalR(routes =>
             {
                 routes.MapHub<ChatHub>("/chatHub");
             });
-
-            //添加允跨域
-            app.UseCors("Everything");
 
             app.UseMvc(routes =>
             {

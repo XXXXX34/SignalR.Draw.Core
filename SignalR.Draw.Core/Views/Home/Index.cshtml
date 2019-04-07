@@ -43,9 +43,10 @@
 </style>
 <script src="~/lib/signalr/signalr.js"></script>
 <script type="text/javascript">
-    var connection = new signalR
-        .HubConnectionBuilder()
-        .withUrl("/chatHub")
+
+    var connection = new signalR.HubConnectionBuilder()
+        .withUrl("/chatHub") //relatively
+        //.withUrl("http://localhost:9000/chatHub") //absolute
         .configureLogging(signalR.LogLevel.Information)
         .build();
 
