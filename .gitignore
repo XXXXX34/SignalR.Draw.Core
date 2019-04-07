@@ -3,6 +3,7 @@
 ################################################################################
 
 /SignalR.Draw.Core/obj
+/SignalR.Draw.Core/.vs
 /SignalR.Draw.Core/bin/Debug/netcoreapp2.2
 /SignalR.Draw.Core/Properties/PublishProfiles
 /SignalR.Draw.Core/bin/Release/netcoreapp2.2
