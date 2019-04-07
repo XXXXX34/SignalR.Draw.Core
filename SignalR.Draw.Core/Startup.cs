@@ -13,7 +13,6 @@ using Microsoft.Extensions.DependencyInjection;
 using SignalR.Draw.Core.SignalR;
 using StackExchange.Redis;
 
-
 namespace SignalR.Draw.Core
 {
     public class Startup
