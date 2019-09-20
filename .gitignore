@@ -1,4 +1,4 @@
-﻿################################################################################
+################################################################################
 # 此 .gitignore 文件已由 Microsoft(R) Visual Studio 自动创建。
 ################################################################################
 
@@ -8,3 +8,4 @@
 /SignalR.Draw.Core/Properties/PublishProfiles
 /SignalR.Draw.Core/bin/Release/netcoreapp2.2
 /.vs/SignalR.Draw.Core/v16/Server/sqlite3
+.vs/
