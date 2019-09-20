@@ -6,5 +6,6 @@
   <PropertyGroup>
     <ActiveDebugProfile>SignalR.Draw.Core</ActiveDebugProfile>
     <NameOfLastUsedPublishProfile>FolderProfile</NameOfLastUsedPublishProfile>
+    <ShowAllFiles>true</ShowAllFiles>
   </PropertyGroup>
 </Project>
