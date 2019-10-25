@@ -10,7 +10,6 @@ using SignalR.Draw.Core.SignalR;
 
 namespace SignalR.Draw.Core.Controllers
 {
-    //1
     public class HomeController : Controller
     {
         private readonly IHubContext<ChatHub> _chatHub;
