@@ -10,6 +10,7 @@ using SignalR.Draw.Core.SignalR;
 
 namespace SignalR.Draw.Core.Controllers
 {
+
     //2
     //2
     public class HomeController : Controller
